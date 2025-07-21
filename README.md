@@ -43,15 +43,27 @@ You can configure this plugin using
 
 ```ruby
     altool(
-        altool_username: ENV["FASTLANE_USER"],
-        altool_password: ENV["FASTLANE_PASSWORD"],
-        altool_app_type: "ios",
-        altool_ipa_path: "./build/Your-ipa.ipa",
-        altool_output_format: "xml",
+        username: ENV["FASTLANE_USER"],
+        password: ENV["FASTLANE_PASSWORD"],
+        app_type: "ios",
+        ipa_path: "./build/Your-ipa.ipa",
+        output_format: "xml",
     )
 
 ```
 
+OR
+
+```ruby
+    altool(
+        api_key_id: "<YOUR_API_KEY_ID>",
+        api_issuer: "<YOUR_API_ISSUER>",
+        app_type: "ios",
+        ipa_path: "./build/Your-ipa.ipa",
+        output_format: "xml",
+    )
+
+```
 Security Note:  
 
 This might print the username and password to build console in the commands, pipe the output to ` /dev/null` or use similar approach so that fastlane don't print command to console.
