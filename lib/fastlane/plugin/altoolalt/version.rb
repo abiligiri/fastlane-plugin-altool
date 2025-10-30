@@ -1,5 +1,5 @@
 module Fastlane
-  module Altool
+  module Altoolalt
     VERSION = "1.2.0"
   end
 end

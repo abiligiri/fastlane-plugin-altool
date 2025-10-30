@@ -1,9 +1,9 @@
 require 'fastlane/action'
-require_relative '../helper/altool_helper'
+require_relative '../helper/altoolalt_helper'
 
 module Fastlane
   module Actions
-    class AltoolAction < Action
+    class AltoolaltAction < Action
       def self.run(params)
         altool = `xcrun -f altool`.chomp
         UI.message("altool binary doesn't exist at path: #{altool}") unless File.exist?(altool)
@@ -48,7 +48,7 @@ module Fastlane
       end
 
       def self.authors
-        ["Shashikant Jagtap"]
+        ["Shashikant Jagtap", "Anand Biligiri", "Maksym Grebenets"]
       end
 
       def self.return_value
@@ -119,7 +119,7 @@ module Fastlane
       end
 
       def self.example_code
-        ['   altool(
+        ['   altool_alt(
             username: ENV["FASTLANE_USER"],
             password: ENV["FASTLANE_PASSWORD"],
             app_type: "ios",
@@ -127,7 +127,7 @@ module Fastlane
             output_format: "xml",
         )
        ',
-         '   altool(
+         '   altool_alt(
             api_key: "<YOUR_API_KEY_ID>",
             api_issuer: "<YOUR_API_ISSUER>",
             app_type: "ios",

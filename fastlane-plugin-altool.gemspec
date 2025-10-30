@@ -2,16 +2,16 @@
 
 lib = File.expand_path("../lib", __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'fastlane/plugin/altool/version'
+require 'fastlane/plugin/altoolalt/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = 'fastlane-plugin-altool'
-  spec.version       = Fastlane::Altool::VERSION
-  spec.author        = 'Shashikant Jagtap'
-  spec.email         = 'shashikant.jagtap@icloud.com'
+  spec.name          = 'fastlane-plugin-altoolalt'
+  spec.version       = Fastlane::Altoolalt::VERSION
+  spec.author        = 'Anand Biligiri'
+  spec.email         = 'abiligiri@users.noreply.github.com'
 
   spec.summary       = 'Upload IPA to iTunes Connect using altool'
-  spec.homepage      = "https://github.com/Shashikant86/fastlane-plugin-altool"
+  spec.homepage      = "https://github.com/abiligiri/fastlane-plugin-altool"
   spec.license       = "MIT"
 
   spec.files         = Dir["lib/**/*"] + %w(README.md LICENSE)
