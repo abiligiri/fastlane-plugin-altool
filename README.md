@@ -1,15 +1,19 @@
-# altool plugin
+# altoolalt plugin
 
-[![fastlane Plugin Badge](https://rawcdn.githack.com/fastlane/fastlane/master/fastlane/assets/plugin-badge.svg)](https://rubygems.org/gems/fastlane-plugin-altool)
-
-<a href="https://travis-ci.org/Shashikant86/fastlane-plugin-altool/"><img src="https://img.shields.io/travis/Shashikant86/fastlane-plugin-altool.svg" /></a>
+[![fastlane Plugin Badge](https://rawcdn.githack.com/fastlane/fastlane/master/fastlane/assets/plugin-badge.svg)](https://rubygems.org/gems/fastlane-plugin-altoolalt)
 
 ## Getting Started
 
-This project is a [_fastlane_](https://github.com/fastlane/fastlane) plugin. To get started with `fastlane-plugin-altool`, add it to your project by running:
+This project is a [_fastlane_](https://github.com/fastlane/fastlane) plugin. To get started with `fastlane-plugin-altoolalt`, add it to your project by running:
 
 ```bash
-fastlane add_plugin altool
+fastlane add_plugin altoolalt
+```
+
+Or add to your `Gemfile`:
+
+```ruby
+gem 'fastlane-plugin-altoolalt'
 ```
 
 ## Pre-requisite
@@ -26,51 +30,125 @@ $ export FASTLANE_PASSWORD="your_super_xecret_password";
 You can do the same for your choice of shell if you aren't using bash.
 
 
-## About altool
+## About
 
-This plugin can be used to upload IPA to iTunes Connect using altool.
+This plugin provides an alternative way to upload IPA files to App Store Connect (formerly iTunes Connect) using Apple's `altool` command-line tool instead of the standard iTMSTransporter.
 
-Currently Fastlane deliver uses iTMSTransporter to upload an ipa files to iTunes Connect but there is slick way to do this using `altool`
+### Why use altool?
 
-This plugin can be used for uploading generated `ipa` file using Gym to iTunes Connect.
+- **Faster uploads** - altool is often faster than iTMSTransporter
+- **Modern API support** - Supports both legacy and modern upload methods
+- **Flexible authentication** - Username/password or API Key authentication
+- **Auto-extraction** (v1.3.0+) - Automatically extracts bundle metadata from IPA
 
-This plugin assume that, you already have that Fastlane setup and your details are configured as ENV variables in `FASTLANE_USER` and `FASTLANE_PASSWORD` by default.
+### Features
+
+- ✅ Support for both `--upload-app` (legacy) and `--upload-package` (modern) methods
+- ✅ Automatic extraction of bundle_id, bundle_version, and bundle_short_version_string from IPA
+- ✅ API Key authentication (recommended) or username/password
+- ✅ Support for iOS, macOS, tvOS, and visionOS apps
+- ✅ Multi-provider account support
+- ✅ Comprehensive error handling and validation
 
 
 ## Usage
 
-You can configure this plugin using
+### Basic Usage (Legacy Method)
+
+Use the traditional `--upload-app` method with username/password:
 
 ```ruby
-    altool(
-        username: ENV["FASTLANE_USER"],
-        password: ENV["FASTLANE_PASSWORD"],
-        app_type: "ios",
-        ipa_path: "./build/Your-ipa.ipa",
-        output_format: "xml",
-    )
-
+altoolalt(
+    username: ENV["FASTLANE_USER"],
+    password: ENV["FASTLANE_PASSWORD"],
+    app_type: "ios",
+    ipa_path: "./build/Your-ipa.ipa",
+    output_format: "xml"
+)
 ```
 
-OR
+Or with API Key authentication (recommended):
 
 ```ruby
-    altool(
-        api_key_id: "<YOUR_API_KEY_ID>",
-        api_issuer: "<YOUR_API_ISSUER>",
-        app_type: "ios",
-        ipa_path: "./build/Your-ipa.ipa",
-        output_format: "xml",
-    )
-
+altoolalt(
+    api_key_id: ENV["APP_STORE_CONNECT_API_KEY_ID"],
+    api_issuer: ENV["APP_STORE_CONNECT_ISSUER_ID"],
+    app_type: "ios",
+    ipa_path: "./build/Your-ipa.ipa",
+    output_format: "xml"
+)
 ```
-Security Note:  
 
-This might print the username and password to build console in the commands, pipe the output to ` /dev/null` or use similar approach so that fastlane don't print command to console.
+### Modern Method (v1.3.0+) - with Auto-Extraction
+
+Use the newer `--upload-package` method with automatic bundle metadata extraction:
+
+```ruby
+altoolalt(
+    use_upload_package: true,
+    api_key_id: ENV["APP_STORE_CONNECT_API_KEY_ID"],
+    api_issuer: ENV["APP_STORE_CONNECT_ISSUER_ID"],
+    apple_id: "1234567890",  # Your App's Apple ID from App Store Connect
+    ipa_path: "./build/Your-ipa.ipa"
+    # bundle_id, bundle_version, and bundle_short_version_string
+    # are automatically extracted from the IPA!
+)
+```
+
+The plugin will automatically extract `bundle_id`, `bundle_version`, and `bundle_short_version_string` from your IPA's Info.plist. You can still override these if needed:
+
+```ruby
+altoolalt(
+    use_upload_package: true,
+    api_key_id: ENV["APP_STORE_CONNECT_API_KEY_ID"],
+    api_issuer: ENV["APP_STORE_CONNECT_ISSUER_ID"],
+    apple_id: "1234567890",
+    ipa_path: "./build/Your-ipa.ipa",
+    bundle_id: "com.example.app",  # Optional: override auto-extraction
+    bundle_version: "1.0",
+    bundle_short_version_string: "1.0.0"
+)
+```
+
+**Security Note:**
+This might print the username and password to build console in the commands. For username/password authentication, consider using API Keys instead, or pipe the output to `/dev/null`.
+
+## Available Parameters
+
+### Common Parameters
+
+| Parameter | Description | Required | Default |
+|-----------|-------------|----------|---------|
+| `ipa_path` | Path to your IPA file | Yes | Most recent .ipa in current directory |
+| `api_key_id` | App Store Connect API Key ID | Yes* | `ENV["ALTOOL_API_KEY"]` |
+| `api_issuer` | App Store Connect API Issuer ID | Yes* | - |
+| `username` | Apple ID username | Yes* | `ENV["FASTLANE_USER"]` |
+| `password` | Apple ID password | Yes* | `ENV["FASTLANE_PASSWORD"]` |
+| `output_format` | Output format (normal, xml, json) | No | `normal` |
+
+\* Either `api_key_id`+`api_issuer` OR `username`+`password` is required
+
+### Legacy Method Parameters (use_upload_package: false)
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| `app_type` | Platform type (ios, osx, appletvos) | `ios` |
+
+### Modern Method Parameters (use_upload_package: true)
+
+| Parameter | Description | Required | Auto-extracted |
+|-----------|-------------|----------|----------------|
+| `use_upload_package` | Enable modern upload method | No (false) | - |
+| `apple_id` | App's Apple ID from App Store Connect | Yes | ❌ No |
+| `platform` | Platform (ios, macos, appletvos, visionos) | No (ios) | - |
+| `bundle_id` | Bundle identifier | No | ✅ Yes |
+| `bundle_version` | CFBundleVersion | No | ✅ Yes |
+| `bundle_short_version_string` | CFBundleShortVersionString | No | ✅ Yes |
+| `provider_public_id` | Provider ID (for multi-provider accounts) | No | - |
 
 ## Example Project Repo
 
-This is a example project [Altool-Demo](https://github.com/Shashikant86/Altool-Demo) available on GitHub which has its own README.
+This is an example project [Altool-Demo](https://github.com/Shashikant86/Altool-Demo) available on GitHub which has its own README.
 
 ## Run tests for this plugin
 
