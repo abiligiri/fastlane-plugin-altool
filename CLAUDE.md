@@ -85,13 +85,14 @@ Both upload methods support two mutually exclusive authentication methods:
 1. **API Key authentication** (preferred):
    - Parameters: `api_key_id` and `api_issuer`
    - Key file must be placed in standard locations: `~/private_keys/`, `~/.private_keys/`, `~/.appstoreconnect/private_keys/`, or `private_keys/`
+   - **Compatibility Note**: The plugin uses `--apiKey` and `--apiIssuer` (camelCase) for maximum backwards compatibility with older Xcode versions. Newer Xcode versions (26+) accept both camelCase and kebab-case (`--api-key`, `--api-issuer`), but older versions only accept camelCase.
 
 2. **Username/Password authentication**:
    - Parameters: `username` and `password`
    - Password is passed via environment variable `ALTOOL_PASSWORD` for security
    - Defaults to `FASTLANE_USER` and `FASTLANE_PASSWORD` environment variables
 
-Authentication logic is centralized in `add_authentication()` method (altoolalt_action.rb:87-102) and validates that one method is provided.
+Authentication logic is centralized in `add_authentication()` method (altoolalt_action.rb:105-122) and validates that one method is provided.
 
 ### Command Execution
 

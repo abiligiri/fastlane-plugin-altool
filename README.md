@@ -49,6 +49,7 @@ This plugin provides an alternative way to upload IPA files to App Store Connect
 - ✅ Support for iOS, macOS, tvOS, and visionOS apps
 - ✅ Multi-provider account support
 - ✅ Comprehensive error handling and validation
+- ✅ Backwards compatible with older Xcode versions (v1.3.1+)
 
 
 ## Usage
@@ -162,6 +163,31 @@ To automatically fix many of the styling issues, use
 ```
 rubocop -a
 ```
+
+## Changelog
+
+### v1.3.1 (2025-11-06)
+- 🐛 **Fixed**: API key parameter compatibility with older Xcode versions
+  - Changed to use `--apiKey`/`--apiIssuer` (camelCase) instead of `--api-key`/`--api-issuer` (kebab-case)
+  - Ensures compatibility with Xcode versions before 16.2 that only accept camelCase parameters
+  - Works with both `--upload-app` and `--upload-package` methods
+
+### v1.3.0 (2025-10-30)
+- ✨ **New**: Support for modern `--upload-package` method with automatic bundle metadata extraction
+- ✨ **New**: Auto-extracts bundle_id, bundle_version, and bundle_short_version_string from IPA
+- ✨ **New**: Support for visionOS platform
+- 📝 Added comprehensive test suite with 7 test cases
+- 📝 Added CLAUDE.md with detailed architecture documentation
+
+### v1.2.0
+- ✨ **New**: API Key authentication support (`api_key_id` and `api_issuer`)
+- ♻️ Renamed plugin from `fastlane-plugin-altool` to `fastlane-plugin-altoolalt`
+- ♻️ Renamed action from `altool` to `altool_alt`
+
+### v1.1.0
+- 🔧 Use `xcrun -f altool` for better Xcode compatibility
+- 🔧 Improved path handling with quotation marks
+- ♻️ Dropped `altool_` prefix from action parameters
 
 ## Issues and Feedback
 

@@ -107,7 +107,9 @@ module Fastlane
         api_issuer = params[:api_issuer]
 
         if !api_key_id.to_s.empty? && !api_issuer.to_s.empty?
-          command.concat(['--api-key', api_key_id, '--api-issuer', api_issuer])
+          # Use camelCase format (--apiKey, --apiIssuer) for maximum backwards compatibility
+          # Older Xcode versions only accept camelCase, while newer versions accept both formats
+          command.concat(['--apiKey', api_key_id, '--apiIssuer', api_issuer])
         else
           username = params[:username]
           ENV["ALTOOL_PASSWORD"] = params[:password]
